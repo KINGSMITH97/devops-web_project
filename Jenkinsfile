@@ -10,7 +10,32 @@ pipeline {
 
         stage('Deploy to S3 bucket') {
             steps {
-                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'devopswebsite', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'us-iso-east-1', showDirectlyInBrowser: false, sourceFile: '**/*', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'jenkins-user', userMetadata: []
+                withAWS(credentials: 'jenkins-user', region: 'us-east-1') {
+                    s3Upload(
+                        consoleLogLevel: 'INFO',
+                        dontSetBuildResultOnFailure: false,
+                        dontWaitForConcurrentBuildCompletion: false,
+                        entries: [
+                            [
+                                bucket: 'devopswebsite',                   // Your S3 bucket name
+                                sourceFile: '**/*',                        // Pattern to match files to upload
+                                path: '',                                  // Destination path in the bucket (optional)
+                                flatten: false,
+                                gzipFiles: false,
+                                keepForever: false,
+                                managedArtifacts: false,
+                                noUploadOnFailure: false,
+                                showDirectlyInBrowser: false,
+                                storageClass: 'STANDARD',
+                                uploadFromSlave: false,
+                                useServerSideEncryption: false
+                            ]
+                        ],
+                        pluginFailureResultConstraint: 'FAILURE',
+                        profileName: 'jenkins-user',
+                        userMetadata: []
+                    )
+                }
             }
         }
     }
