@@ -10,21 +10,7 @@ pipeline {
 
         stage('Deploy to S3 bucket') {
             steps {
-                withAWS(credentials: 'jenkins-user', region: 'us-east-1') {
-                    s3Upload(
-                        file: '**/*',                        // Pattern to match files to upload
-                        bucket: 'devopswebsite',             // Your S3 bucket name
-                        path: '',                            // Destination path in the bucket (optional)
-                        profileName: 'default',              // (Optional) Specify AWS profile
-                        consoleLogLevel: 'INFO',             // Log level for console output
-                        userMetadata: [                      // (Optional) User-defined metadata
-                            'key': 'value'
-                        ],
-                        dontWaitForConcurrentBuildCompletion: false, // Wait for other builds to finish
-                        pluginFailureResultConstraint: 'FAILURE',    // What happens if the plugin fails
-                        dontSetBuildResultOnFailure: false           // Whether to mark build as failed on error
-                    )
-                }
+                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'devopswebsite', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'us-iso-east-1', showDirectlyInBrowser: false, sourceFile: '/var/lib/jenkins/workspace/devops website', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'jenkins-user', userMetadata: []
             }
         }
     }
