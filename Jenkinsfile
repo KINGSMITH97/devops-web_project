@@ -11,7 +11,15 @@ pipeline{
         stage('Deploy to S3 bucket'){
             steps {
                 withAWS(credentials: 'jenkins-user', region: 'us-east-1') {
-                    s3Upload(bucket: 'devopswebsite', path: '', includePathPattern: '**/*')
+                   s3Upload(
+                        entries: [
+                                    [
+                                        bucket: 'devopswebsite',        // Your S3 bucket name
+                                        sourceFile: '**/*',             // Pattern to match files to upload
+                                        path: '',                       // Destination path in the bucket (optional)
+                                    ]
+                                ]
+)
                 }
             }
         }
